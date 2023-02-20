@@ -1,0 +1,32 @@
+name: Build and commit out.lua
+
+on:
+  push:
+    paths:
+      - '**.lua'
+      - 'build.py'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+
+    - name: Run build.py
+      run: python build.py out/build
+      
+    - name: Update file
+      run: |
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add out/build.lua
+        git commit -m "Update file"
+        git push origin main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

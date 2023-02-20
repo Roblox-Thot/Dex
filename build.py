@@ -1,7 +1,12 @@
-import os
+import os,sys
 
 embedStr = "local EmbeddedModules = {\n"
 files = os.listdir("modules")
+
+if len(sys.argv) > 1:
+    fileName = sys.argv[1]
+else:
+    fileName = "out.lua"
 
 def readfile(path):
     file = open(path,"r")
@@ -23,6 +28,6 @@ for filename in files:
 embedStr = embedStr + "}"
 embedStr = embedStr + "\n" + readfile("main.lua")
 
-file = open("out.lua","w")
+file = open(f'{fileName}.lua',"w")
 file.write(embedStr)
 file.close()

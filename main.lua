@@ -139,7 +139,7 @@ Main = (function()
 	Main.AppControls = {}
 	Main.Apps = Apps
 	Main.MenuApps = {}
-	Main.GitRepoName = "LorekeeperZinnia/Dex"
+	Main.GitRepoName = "Roblox-Thot/Dex"
 	
 	Main.DisplayOrders = {
 		SideWindow = 8,
@@ -180,11 +180,6 @@ Main = (function()
 			
 			if EmbeddedModules then -- Offline Modules
 				control = EmbeddedModules[name]()
-				
-				-- TODO: Remove when open source
-				if gethsfuncs then
-					control = _G.moduleData
-				end
 				
 				if not control then Main.Error("Missing Embedded Module: "..name) end
 			elseif _G.DebugLoadModel then -- Load Debug Model File
@@ -299,7 +294,7 @@ Main = (function()
 		-- other
 		env.setfflag = setfflag
 		env.decompile = decompile
-		env.protectgui = protect_gui or (syn and syn.protect_gui)
+		env.protectgui = protect_gui or (syn and not gethui and syn.protect_gui) or (syn and gethui)
 		env.gethui = gethui
 		env.setclipboard = setclipboard
 		env.getnilinstances = getnilinstances or get_nil_instances
@@ -313,56 +308,6 @@ Main = (function()
 		
 		setmetatable(env,nil)
 	end
-	
-	--[[
-	Main.IncompatibleTest = function()
-		local function incompatibleMessage(reason)
-			local msg = Instance.new("ScreenGui")
-			local t = Instance.new("TextLabel",msg)
-			t.BackgroundColor3 = Color3.fromRGB(50,50,50)
-			t.Position = UDim2.new(0,0,0,-36)
-			t.Size = UDim2.new(1,0,1,36)
-			t.TextColor3 = Color3.new(1,1,1)
-			t.TextWrapped = true
-			t.TextScaled = true
-			t.Text = "\n\n\n\n\n\n\n\nHello Skidsploit user,\nZinnia and the Secret Service does not approve of Dex being used on your skidsploit.\nPlease consider getting something better.\n\nIncompatible Reason: "..reason.."\n\n\n\n\n\n\n\n"
-			
-			local sound = Instance.new("Sound",msg)
-			sound.SoundId = "rbxassetid://175964948"
-			sound.Volume = 1
-			sound.Looped = true
-			sound.Playing = true
-			Lib.ShowGui(msg)
-			
-			if os and os.execute then pcall(os.execute,'explorer "https://x.synapse.to/"') end
-			while wait() do end
-		end
-		
-		local t = {}
-		t[1] = t
-		local x = unpack(t) or incompatibleMessage("WRAPPER FAILED TO CYCLIC #1")
-		if x[1] ~= t then incompatibleMessage("WRAPPER FAILED TO CYCLIC #2") end
-		
-		if game ~= workspace.Parent then incompatibleMessage("WRAPPER NO CACHE") end
-		
-		if Main.Elevated and not loadstring("for i = 1,1 do continue end") then incompatibleMessage("CAN'T CONTINUE OR NO LOADSTRING") end
-		
-		local obj = newproxy(true)
-		local mt = getmetatable(obj)
-		mt.__index = function() incompatibleMessage("CAN'T NAMECALL") end
-		mt.__namecall = function() end
-		obj:No()
-		
-		local fEnv = setmetatable({zin = 5},{__index = getfenv()})
-		local caller = function(f) f() end
-		setfenv(caller,fEnv)
-		caller(function() if not getfenv(2).zin then incompatibleMessage("RERU WILL BE FILING A LAWSUIT AGAINST YOU SOON") end end)
-		
-		local second = false
-		coroutine.wrap(function() local start = tick() wait(5) if tick() - start < 0.1 or not second then incompatibleMessage("SKIDDED YIELDING") end end)()
-		second = true
-	end
-	]]
 	
 	Main.LoadSettings = function()
 		local s,data = pcall(env.readfile or error,"DexSettings.json")
