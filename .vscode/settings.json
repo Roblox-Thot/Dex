@@ -1,0 +1,33 @@
+{
+    "robloxLsp.diagnostics.globals": [
+        "rconsoleprint",
+        "EmbeddedModules",
+        "getsynasset",
+        "syn",
+        "readfile",
+        "writefile",
+        "appendfile",
+        "makefolder",
+        "listfiles",
+        "loadfile",
+        "saveinstance",
+        "getupvals",
+        "getconsts",
+        "is_l_closure",
+        "checkcaller",
+        "getreg",
+        "getgc",
+        "islclosure",
+        "setfflag",
+        "decompile",
+        "protect_gui",
+        "gethui",
+        "setclipboard",
+        "getnilinstances",
+        "get_nil_instances",
+        "getloadedmodules",
+        "identifyexecutor",
+        "movefileas",
+        "Version"
+    ]
+}
