@@ -10158,7 +10158,7 @@ Main = (function()
 	Main.Error = function(str)
 		if rconsoleprint then
 			rconsoleprint("DEX ERROR: "..tostring(str).."\n")
-			wait(9e9)
+			coroutine.yield()
 		else
 			error(str)
 		end
