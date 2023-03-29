@@ -1,3 +1,10 @@
+```lua
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Roblox-Thot/Dex/main/out/build.lua"))()
+```
+
+
+
+
 # Intro
 New Dex was planned to be a debugging suite. Only the Explorer part is completed, probably nothing else will be.
 
