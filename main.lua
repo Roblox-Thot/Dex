@@ -13,6 +13,22 @@
 	Note that very limited to no support will be provided.
 ]]
 
+-- more exploit compatibility (zzerexx was here)
+local getsynasset = getsynasset or getcustomasset
+local syn = syn or nil
+if syn == nil then
+	local Hash = loadstring(game:HttpGet("https://raw.githubusercontent.com/zzerexx/scripts/main/Libraries/Hash.lua"), "HashLib")()
+	local gethui = gethui or get_hidden_ui or get_hidden_gui or hiddenUI
+	syn = {
+		crypt = {
+			hash = Hash.sha384
+		},
+		protect_gui = function(obj)
+			obj.Parent = gethui()
+		end
+	}
+end
+
 -- Main vars
 local Main, Explorer, Properties, ScriptViewer, DefaultSettings, Notebook, Serializer, Lib
 local API, RMD
@@ -191,7 +207,7 @@ Main = (function()
 			else
 				-- Get hash data
 				local hashs = Main.ModuleHashData
-				if not hashs then
+				if (true == false) and not hashs then -- this isnt gonna receive updates anyway
 					local s,hashDataStr = pcall(game.HttpGet, game, "https://api.github.com/repos/"..Main.GitRepoName.."/ModuleHashs.dat")
 					if not s then Main.Error("Failed to get module hashs") end
 					
@@ -207,11 +223,11 @@ Main = (function()
 				local filePath = "dex/ModuleCache/"..name..".lua"
 				local s,moduleStr = pcall(env.readfile,filePath)
 				
-				if s and hashfunc(moduleStr) == hashs[name] then
+				if s or (s and hashfunc(moduleStr) == hashs[name]) then
 					control = loadstring(moduleStr)()
 				else
 					-- Download and cache
-					local s,moduleStr = pcall(game.HttpGet, game, "https://api.github.com/repos/"..Main.GitRepoName.."/Modules/"..name..".lua")
+					local s,moduleStr = pcall(game.HttpGet, game, "https://raw.githubusercontent.com/"..Main.GitRepoName.."master/Modules/"..name..".lua")
 					if not s then Main.Error("Failed to get external module data of "..name) end
 					
 					env.writefile(filePath,moduleStr)
