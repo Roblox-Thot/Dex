@@ -296,7 +296,7 @@ Main = (function()
 		
 		-- other
 		env.setfflag = setfflag
-		env.decompile = decompile
+		env.decompile = loadstring(game:HttpGet("https://raw.githubusercontent.com/TheSeaweedMonster/Celery/main/saveinstance.lua"))()
 		env.protectgui = protect_gui or (syn and not gethui and syn.protect_gui) or (syn and gethui)
 		env.gethui = gethui
 		env.setclipboard = setclipboard
