@@ -3,15 +3,11 @@ import os,sys
 embedStr = "local EmbeddedModules = {\n"
 files = os.listdir("modules")
 
-if len(sys.argv) > 1:
-    fileName = sys.argv[1]
-else:
-    fileName = "out.lua"
+fileName = sys.argv[1] if len(sys.argv) > 1 else "out.lua"
 
 def readfile(path):
-    file = open(path,"r")
-    str = file.read()
-    file.close()
+    with open(path,"r") as file:
+        str = file.read()
     return str
 
 def addModuleFile(path):
@@ -20,14 +16,18 @@ def addModuleFile(path):
     moduleName = os.path.splitext(os.path.basename(path))[0]
     moduleSource = readfile(path)
 
-    embedStr = embedStr + '["' + moduleName + '"] = function()\n' + moduleSource + '\nend,\n'
+    embedStr = (
+        f'{embedStr}["{moduleName}'
+        + '"] = function()\n'
+        + moduleSource
+        + '\nend,\n'
+    )
 
 for filename in files:
-    addModuleFile("modules/" + filename)
+    addModuleFile(f"modules/{filename}")
 
 embedStr = embedStr + "}"
 embedStr = embedStr + "\n" + readfile("main.lua")
 
-file = open(f'{fileName}.lua',"w")
-file.write(embedStr)
-file.close()
+with open(f'{fileName}.lua',"w") as file:
+    file.write(embedStr)
