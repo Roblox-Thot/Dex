@@ -26,7 +26,7 @@ jobs:
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         git add out/build.lua
-        git commit -m "Update file"
+        git commit -m "(File update) Updated 'build.lua'"
         git push origin main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
