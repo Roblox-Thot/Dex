@@ -8,10 +8,23 @@
 	This is the final version of this script.
 	You are encouraged to edit, fork, do whatever with this. I pretty much won't be updating it anymore.
 	Though I would appreciate it if you kept the credits in the script if you enjoy this hard work.
-	
-	If you want more info, you can join the server: https://discord.io/zinnia
-	Note that very limited to no support will be provided.
 ]]
+
+-- more exploit compatibility (zzerexx was here)
+local getsynasset = getsynasset or getcustomasset
+local syn = syn or nil
+if syn == nil then
+	local Hash = loadstring(game:HttpGet("https://raw.githubusercontent.com/zzerexx/scripts/main/Libraries/Hash.lua"), "HashLib")()
+	local gethui = gethui or get_hidden_ui or get_hidden_gui or hiddenUI
+	syn = {
+		crypt = {
+			hash = Hash.sha384
+		},
+		protect_gui = function(obj)
+			obj.Parent = gethui()
+		end
+	}
+end
 
 -- Main vars
 local Main, Explorer, Properties, ScriptViewer, DefaultSettings, Notebook, Serializer, Lib
@@ -96,6 +109,7 @@ end)()
 local Settings = {}
 local Apps = {}
 local env = {}
+local cloner = cloneref or function(...) return ... end
 local service = setmetatable({},{__index = function(self,name)
 	local serv = game:GetService(name)
 	self[name] = serv
@@ -139,7 +153,7 @@ Main = (function()
 	Main.AppControls = {}
 	Main.Apps = Apps
 	Main.MenuApps = {}
-	Main.GitRepoName = "LorekeeperZinnia/Dex"
+	Main.GitRepoName = "Roblox-Thot/Dex"
 	
 	Main.DisplayOrders = {
 		SideWindow = 8,
@@ -168,7 +182,7 @@ Main = (function()
 	Main.Error = function(str)
 		if rconsoleprint then
 			rconsoleprint("DEX ERROR: "..tostring(str).."\n")
-			wait(9e9)
+			coroutine.yield()
 		else
 			error(str)
 		end
@@ -181,11 +195,6 @@ Main = (function()
 			if EmbeddedModules then -- Offline Modules
 				control = EmbeddedModules[name]()
 				
-				-- TODO: Remove when open source
-				if gethsfuncs then
-					control = _G.moduleData
-				end
-				
 				if not control then Main.Error("Missing Embedded Module: "..name) end
 			elseif _G.DebugLoadModel then -- Load Debug Model File
 				local model = Main.DebugModel
@@ -194,29 +203,16 @@ Main = (function()
 				control = loadstring(model.Modules[name].Source)()
 				print("Locally Loaded Module",name,control)
 			else
-				-- Get hash data
-				local hashs = Main.ModuleHashData
-				if not hashs then
-					local s,hashDataStr = pcall(game.HttpGet, game, "https://api.github.com/repos/"..Main.GitRepoName.."/ModuleHashs.dat")
-					if not s then Main.Error("Failed to get module hashs") end
-					
-					local s,hashData = pcall(service.HttpService.JSONDecode,service.HttpService,hashDataStr)
-					if not s then Main.Error("Failed to decode module hash JSON") end
-					
-					hashs = hashData
-					Main.ModuleHashData = hashs
-				end
-				
 				-- Check if local copy exists with matching hashs
 				local hashfunc = (syn and syn.crypt.hash) or function() return "" end
 				local filePath = "dex/ModuleCache/"..name..".lua"
 				local s,moduleStr = pcall(env.readfile,filePath)
 				
-				if s and hashfunc(moduleStr) == hashs[name] then
+				if s or (s and hashfunc(moduleStr) == hashs[name]) then
 					control = loadstring(moduleStr)()
 				else
 					-- Download and cache
-					local s,moduleStr = pcall(game.HttpGet, game, "https://api.github.com/repos/"..Main.GitRepoName.."/Modules/"..name..".lua")
+					local s,moduleStr = pcall(game.HttpGet, game, "https://raw.githubusercontent.com/"..Main.GitRepoName.."master/Modules/"..name..".lua")
 					if not s then Main.Error("Failed to get external module data of "..name) end
 					
 					env.writefile(filePath,moduleStr)
@@ -298,8 +294,8 @@ Main = (function()
 		
 		-- other
 		env.setfflag = setfflag
-		env.decompile = decompile
-		env.protectgui = protect_gui or (syn and syn.protect_gui)
+		env.decompile = loadstring(game:HttpGet("https://raw.githubusercontent.com/ThotArchive/Celery/main/decompile.lua"))()
+		env.protectgui = false --protect_gui or (syn and not gethui and syn.protect_gui) or (syn and gethui)
 		env.gethui = gethui
 		env.setclipboard = setclipboard
 		env.getnilinstances = getnilinstances or get_nil_instances
@@ -313,56 +309,6 @@ Main = (function()
 		
 		setmetatable(env,nil)
 	end
-	
-	--[[
-	Main.IncompatibleTest = function()
-		local function incompatibleMessage(reason)
-			local msg = Instance.new("ScreenGui")
-			local t = Instance.new("TextLabel",msg)
-			t.BackgroundColor3 = Color3.fromRGB(50,50,50)
-			t.Position = UDim2.new(0,0,0,-36)
-			t.Size = UDim2.new(1,0,1,36)
-			t.TextColor3 = Color3.new(1,1,1)
-			t.TextWrapped = true
-			t.TextScaled = true
-			t.Text = "\n\n\n\n\n\n\n\nHello Skidsploit user,\nZinnia and the Secret Service does not approve of Dex being used on your skidsploit.\nPlease consider getting something better.\n\nIncompatible Reason: "..reason.."\n\n\n\n\n\n\n\n"
-			
-			local sound = Instance.new("Sound",msg)
-			sound.SoundId = "rbxassetid://175964948"
-			sound.Volume = 1
-			sound.Looped = true
-			sound.Playing = true
-			Lib.ShowGui(msg)
-			
-			if os and os.execute then pcall(os.execute,'explorer "https://x.synapse.to/"') end
-			while wait() do end
-		end
-		
-		local t = {}
-		t[1] = t
-		local x = unpack(t) or incompatibleMessage("WRAPPER FAILED TO CYCLIC #1")
-		if x[1] ~= t then incompatibleMessage("WRAPPER FAILED TO CYCLIC #2") end
-		
-		if game ~= workspace.Parent then incompatibleMessage("WRAPPER NO CACHE") end
-		
-		if Main.Elevated and not loadstring("for i = 1,1 do continue end") then incompatibleMessage("CAN'T CONTINUE OR NO LOADSTRING") end
-		
-		local obj = newproxy(true)
-		local mt = getmetatable(obj)
-		mt.__index = function() incompatibleMessage("CAN'T NAMECALL") end
-		mt.__namecall = function() end
-		obj:No()
-		
-		local fEnv = setmetatable({zin = 5},{__index = getfenv()})
-		local caller = function(f) f() end
-		setfenv(caller,fEnv)
-		caller(function() if not getfenv(2).zin then incompatibleMessage("RERU WILL BE FILING A LAWSUIT AGAINST YOU SOON") end end)
-		
-		local second = false
-		coroutine.wrap(function() local start = tick() wait(5) if tick() - start < 0.1 or not second then incompatibleMessage("SKIDDED YIELDING") end end)()
-		second = true
-	end
-	]]
 	
 	Main.LoadSettings = function()
 		local s,data = pcall(env.readfile or error,"DexSettings.json")
