@@ -1,16 +1,13 @@
-```lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Roblox-Thot/Dex/main/out/build.lua"))()
-```
+# Dex - The Freedom Explorer
+![Logo](/logo.png)
 
+## Intro
+New Dex was planned to be a debugging suite.
+It was discontinued in mid 2021 when grand freedom was achieved, and the script was repurposed to serve the agency's true ambitions.
 
-
-
-# Intro
-New Dex was planned to be a debugging suite. Only the Explorer part is completed, probably nothing else will be.
-
-It was discontinued more than a year ago, might as well just release.
+Witness the most powerful explorer to have ever existed. Bringing unlimited freedom to everyone who has used it. Exploring places that have never been explored before.
 	
-This is the final version of this script.
+This is the final version of this script, it will no longer be updated. Certain powerful features of this script are off-limits and won't be released.
 You are encouraged to edit, fork, do whatever with this. I pretty much won't be updating it anymore. Pull requests probably won't be accepted.
 Though I would highly appreciate it if you kept the credits in the script. I put a lot of hours into this during the time I worked on it.
 
@@ -74,6 +71,14 @@ Features that existed in old Dex that I didn't get to make. These should be the 
 - Settings menu
 - Tabs in script viewer
 
-## Server
-If you would like to find more information (such as outdated docs), or talk to others interested in this script, you may join the server:<br>https://discord.io/zinnia<br>
+## What is not Included
+Certain features and extensions are private and are reserved for agency use. These are not included in the public release of Dex
+- Binary SaveInstance Module
+- Client <-> Server Bridge
+- Secret Service Panel (Executor + Output Viewer)
+- Datastore Editor
+- 3D Model Viewer
+
+## Community Server
+If you would like to find more information (such as outdated docs), or talk to others interested in this script, you may join the server:<br>https://discord.gg/jnXFq2VBgU<br>
 Note that very limited to no support will be provided.
